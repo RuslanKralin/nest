@@ -11,6 +11,15 @@ async function start() {
 
   app.setGlobalPrefix('api');
 
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+    credentials: true,
+  });
+  //ыреализлвать защиту маршрутов только для авторизованных пользователей
+  // app.useGlobalGuards(new JwtAuthGuard());
+
   const config = new DocumentBuilder()
     .setTitle('Продвинутый бэкенд')
     .setDescription('Документация REST API')

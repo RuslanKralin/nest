@@ -1,8 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user-dto';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.model';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/auth/roles-auth.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
 
 @ApiTags('Пользователи')
 @Controller('users') // базовый путь для всех методов контроллера
@@ -33,6 +36,8 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Получение всех пользователей' })
   @ApiResponse({ status: 200, type: [User], description: 'Все пользователи' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get()
   getAllUsers() {
     return this.usersService.getAllUsers();
