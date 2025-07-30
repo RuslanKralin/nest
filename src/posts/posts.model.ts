@@ -5,22 +5,22 @@ import {
   Column,
   DataType,
   BelongsToMany,
-  HasMany,
+  BelongsTo,
+  ForeignKey,
 } from 'sequelize-typescript';
-import { Posts } from 'src/posts/posts.model';
 import { Role } from 'src/roles/roles.model';
 import { UserRoles } from 'src/roles/user-roles.model';
-// import { UserRoles } from 'src/roles/user-roles.model';
+import { User } from 'src/users/user.model';
 
-interface UserCreationProps {
+interface PostsCreationProps {
   email: string;
   password: string;
 }
 
 @Table({
-  tableName: 'users',
+  tableName: 'posts',
 })
-export class User extends Model<User, UserCreationProps> {
+export class Posts extends Model<Posts, PostsCreationProps> {
   @ApiProperty({ example: '1', description: 'Unique identifier' })
   @Column({
     type: DataType.INTEGER,
@@ -30,38 +30,34 @@ export class User extends Model<User, UserCreationProps> {
   })
   declare id: number;
 
-  @ApiProperty({ example: 'user@example.com', description: 'User email' })
+  @ApiProperty({ example: 'Заголовок', description: 'Пример заголовка' })
   @Column({
     type: DataType.STRING,
     allowNull: false,
     unique: true,
   })
-  email: string;
+  title: string;
 
-  @ApiProperty({ example: 'password', description: 'User password' })
+  @ApiProperty({ example: 'контент', description: 'Пример контента' })
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  password: string;
+  content: string;
 
   @ApiProperty({ example: 'true', description: 'User banned status' })
   @Column({
-    type: DataType.BOOLEAN,
+    type: DataType.STRING,
     defaultValue: false,
   })
-  banned: boolean;
+  image: string;
 
-  @ApiProperty({ example: 'за хулиганство', description: 'User ban reason' })
+  @ForeignKey(() => User)
   @Column({
-    type: DataType.STRING,
-    allowNull: true,
+    type: DataType.INTEGER,
   })
-  banReason: string;
+  userId: number;
 
-  @BelongsToMany(() => Role, () => UserRoles)
-  roles: Role[];
-
-  @HasMany(() => Posts)
-  posts: Posts[];
+  @BelongsTo(() => User)
+  author: User;
 }

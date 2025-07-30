@@ -15,7 +15,7 @@ import { ROLES_KEY } from './roles-auth.decorator';
 export class RolesGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly reflector: Reflector,
+    private readonly reflector: Reflector, // встроенный класс для получения метаданных
   ) {}
   canActivate(
     context: ExecutionContext,
@@ -27,6 +27,7 @@ export class RolesGuard implements CanActivate {
       );
 
       if (!requiredRoles) {
+        // если нет ролей, то возвращаем true
         return true;
       }
 

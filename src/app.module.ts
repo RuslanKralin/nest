@@ -7,6 +7,9 @@ import { RolesModule } from './roles/roles.module';
 import { Role } from './roles/roles.model';
 import { UserRoles } from './roles/user-roles.model';
 import { AuthModule } from './auth/auth.module';
+import { PostsController } from './posts/posts.controller';
+import { PostsModule } from './posts/posts.module';
+import { Posts } from './posts/posts.model';
 
 @Module({
   imports: [
@@ -21,14 +24,15 @@ import { AuthModule } from './auth/auth.module';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      models: [User, Role, UserRoles], // автоматически загружает все модели в папке models
+      models: [User, Role, UserRoles, Posts], // автоматически загружает все модели в папке models
       autoLoadModels: true, // автоматически загружает все модели в папке models
     }),
     UsersModule,
     RolesModule,
     AuthModule,
+    PostsModule,
   ],
-  controllers: [],
+  controllers: [PostsController],
   providers: [], // тут то что содержит какую то логику и используется в компонентах
   exports: [], // то что мы хотим использовать в других компонентах
 })

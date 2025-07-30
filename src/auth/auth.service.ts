@@ -60,7 +60,7 @@ export class AuthService {
     return this.generateToken(user);
   }
 
-  private generateToken(user: any) {
+  private generateToken(user: User) {
     // Проверяем, что email существует
     if (!user.email) {
       console.error('❌ Ошибка: email пользователя отсутствует');
