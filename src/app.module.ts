@@ -8,7 +8,7 @@ import { Role } from './roles/roles.model';
 import { UserRoles } from './roles/user-roles.model';
 import { AuthModule } from './auth/auth.module';
 import { PostsController } from './posts/posts.controller';
-import { PostsModule } from './posts/posts.module';
+// import { PostsModule } from './posts/posts.module';
 import { Posts } from './posts/posts.model';
 
 @Module({
@@ -30,9 +30,9 @@ import { Posts } from './posts/posts.model';
     UsersModule,
     RolesModule,
     AuthModule,
-    PostsModule,
+    // PostsModule,
   ],
-  controllers: [PostsController],
+  // controllers: [PostsController],
   providers: [], // тут то что содержит какую то логику и используется в компонентах
   exports: [], // то что мы хотим использовать в других компонентах
 })
