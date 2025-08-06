@@ -15,9 +15,13 @@ export class UsersService {
   ) {}
 
   async createUser(dto: CreateUserDto) {
-    const role = await this.rolesService.getRoleByValue('USER');
+    console.log('📥 Входящие данные createUser:', JSON.stringify(dto, null, 2));
+    // Берем первую роль из массива или используем USER по умолчанию
+    const roleValue = dto.roles && dto.roles.length > 0 ? dto.roles[0] : 'USER';
+
+    const role = await this.rolesService.getRoleByValue(roleValue);
     if (!role) {
-      throw new Error('Роль USER не найдена');
+      throw new Error(`Роль ${roleValue} не найдена`);
     }
 
     const candidate = await User.findOne({

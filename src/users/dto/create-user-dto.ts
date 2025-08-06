@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
   IsEmail,
   IsNotEmpty,
   IsString,
@@ -18,4 +19,9 @@ export class CreateUserDto {
   @MinLength(6, { message: 'Пароль должен содержать минимум 6 символов' })
   @MaxLength(20, { message: 'Пароль не должен превышать 20 символов' })
   password: string;
+
+  @ApiProperty({ example: ['ADMIN'], description: 'User roles' })
+  @IsArray({ message: 'Roles должен быть массивом' })
+  @IsString({ each: true, message: 'Каждая роль должна быть строкой' })
+  roles?: string[];
 }
