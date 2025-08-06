@@ -6,12 +6,14 @@ import { RolesService } from '../roles/roles.service';
 import { Role } from '../roles/roles.model';
 import { AddRoleDto } from './dto/add-role.dto';
 import { BanUserDto } from './dto/ban-user.dto';
+// import { LoggingService } from 'src/logging/logging.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User) private userRepo: typeof User,
     private rolesService: RolesService,
+    // private loggingService: LoggingService,
   ) {}
 
   async createUser(dto: CreateUserDto) {

@@ -10,13 +10,13 @@ import { AuthModule } from 'src/auth/auth.module';
 import { Posts } from 'src/posts/posts.model';
 
 @Module({
-  controllers: [UsersController], // контроллеры
-  providers: [UsersService], // сервисы
+  controllers: [UsersController],
+  providers: [UsersService],
   imports: [
     SequelizeModule.forFeature([User, Role, UserRoles, Posts]),
     RolesModule,
-    forwardRef(() => AuthModule),
-  ], // модели
+    forwardRef(() => AuthModule), // Используем forwardRef для избежания циклической зависимости
+  ],
   exports: [UsersService],
 })
 export class UsersModule {}

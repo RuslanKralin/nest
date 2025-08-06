@@ -2,11 +2,20 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { LoggingService } from './logging/logging.service';
+import { LoggingInterceptor } from './logging/interceptors/logging.interceptor';
 
 async function start() {
   const PORT = process.env.PORT || 5000;
 
   const app = await NestFactory.create(AppModule);
+
+  // Получаем экземпляр LoggingService для перехватчика
+  const loggingService = app.get(LoggingService);
+
+  // Регистрируем глобальный перехватчик для логирования
+  app.useGlobalInterceptors(new LoggingInterceptor(loggingService));
+
   app.useGlobalPipes(new ValidationPipe());
 
   app.setGlobalPrefix('api');
@@ -29,7 +38,11 @@ async function start() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
 
-  await app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+  await app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
+    // Логируем запуск сервера
+    loggingService.info(`Приложение запущено на порту ${PORT}`, 'Main');
+  });
 }
 
 start();

@@ -1,22 +1,29 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
-import { ConfigModule } from '@nestjs/config';
 import { User } from './users/user.model';
 import { RolesModule } from './roles/roles.module';
 import { Role } from './roles/roles.model';
 import { UserRoles } from './roles/user-roles.model';
 import { AuthModule } from './auth/auth.module';
-import { PostsController } from './posts/posts.controller';
-// import { PostsModule } from './posts/posts.module';
 import { Posts } from './posts/posts.model';
+import { LoggingModule } from './logging/logging.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.${process.env.NODE_ENV}.env`,
+      envFilePath: !process.env.NODE_ENV
+        ? '.development.env'
+        : `.${process.env.NODE_ENV}.env`,
     }),
+    MongooseModule.forRoot(
+      `mongodb://${process.env.MONGO_URI}/${process.env.MONGO_DB}`,
+    ),
+    LoggingModule,
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.DB_HOST,
@@ -24,16 +31,18 @@ import { Posts } from './posts/posts.model';
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      models: [User, Role, UserRoles, Posts], // автоматически загружает все модели в папке models
-      autoLoadModels: true, // автоматически загружает все модели в папке models
+      models: [User, Role, UserRoles, Posts],
+      autoLoadModels: true,
+      dialectOptions: {
+        ssl: false,
+      },
+      logging: console.log,
     }),
     UsersModule,
     RolesModule,
     AuthModule,
-    // PostsModule,
   ],
-  // controllers: [PostsController],
-  providers: [], // тут то что содержит какую то логику и используется в компонентах
-  exports: [], // то что мы хотим использовать в других компонентах
+  providers: [JwtService],
+  exports: [],
 })
 export class AppModule {}

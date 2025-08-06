@@ -1,3 +1,4 @@
+# Это создаёт контейнер PostgreSQL с необходимыми учётными данными
 version: '3.8'
 
 services:
@@ -6,24 +7,24 @@ services:
     ports:
       - '5433:5432' # Изменено с 5432:5432 на 5433:5432
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=nest
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres # Указывает имя пользователя
+      - POSTGRES_PASSWORD=postgres # Указывает пароль
+      - POSTGRES_DB=nest # Указывает имя базы данных
+      - POSTGRES_HOST_AUTH_METHOD=trust # Указывает метод аутентификации
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
+      - postgres_data:/var/lib/postgresql/data # Сохраняет данные базы данных
+    restart: always # Перезапускает контейнер при остановке
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4 # Запускает pgadmin
     ports:
-      - '5050:80'
+      - '5050:80' # Указывает порт
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com # Указывает email
+      - PGADMIN_DEFAULT_PASSWORD=admin # Указывает пароль
     depends_on:
-      - db
-    restart: always
+      - db # Запускает pgadmin только после запуска db
+    restart: always # Перезапускает контейнер при остановке
 
 volumes:
-  postgres_data:
+  postgres_data: # Сохраняет данные базы данных

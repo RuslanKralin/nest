@@ -1,12 +1,41 @@
+# docker-compose.dev.yml — для запуска всего приложения в режиме разработки:
+
+# Использует Dockerfile.dev для сборки приложения
+# Настраивает порты и другие параметры для режима разработки
+# Используется командой npm run docker:dev
+
 version: '3.8'
 
 services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=logs
+    volumes:
+      - mongodb_data:/data/db
+    restart: always
+
+  mongo-express:
+    image: mongo-express:latest # использует mongo-express для визуализации MongoDB
+    ports:
+      - '8081:8081' # использует порт 8081 для доступа к mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin # указывает имя пользователя для mongo-express
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password # указывает пароль для mongo-express
+      - ME_CONFIG_MONGODB_SERVER=mongodb # указывает сервер MongoDB
+    depends_on:
+      - mongodb
+    restart: always
   app-dev:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.dev # указывает Dockerfile для сборки
     ports:
-      - '5000:5000'
+      - '5000:5000' # указывает порт для доступа к приложению
     volumes:
       - .:/app
       - /app/node_modules
@@ -17,8 +46,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=nest
+      - MONGO_URI=mongodb://admin:password@mongodb:27017 # указывает URI для подключения к MongoDB
+      - MONGO_DB=logs # указывает имя базы данных для MongoDB
     depends_on:
       - db
+      - mongodb # добавьте зависимость от MongoDB
     command: yarn start:dev
 
   db:
@@ -46,3 +78,4 @@ services:
 
 volumes:
   postgres_data:
+  mongodb_data: # сохраняет данные MongoDB
