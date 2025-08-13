@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { PostsController } from './posts/posts.controller';
 // import { PostsModule } from './posts/posts.module';
 import { Posts } from './posts/posts.model';
+import { LoggingModule } from './logging/logging.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -17,6 +19,10 @@ import { Posts } from './posts/posts.model';
       isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
+    MongooseModule.forRoot(
+      'mongodb://admin:password@mongodb:27017/logs?authSource=admin',
+    ),
+    LoggingModule,
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.DB_HOST,
@@ -30,10 +36,12 @@ import { Posts } from './posts/posts.model';
     UsersModule,
     RolesModule,
     AuthModule,
+
     // PostsModule,
   ],
   // controllers: [PostsController],
   providers: [], // тут то что содержит какую то логику и используется в компонентах
   exports: [], // то что мы хотим использовать в других компонентах
+  controllers: [], // то что мы хотим использовать в других компонентах
 })
 export class AppModule {}
