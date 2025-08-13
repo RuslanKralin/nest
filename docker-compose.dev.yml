@@ -19,9 +19,13 @@ services:
       - POSTGRES_DB=nest
       - MONGO_URI=mongodb://admin:password@mongodb:27017 # указывает URI для подключения к MongoDB
       - MONGO_DB=logs # указывает имя базы данных для MongoDB
+      - REDIS_HOST=redis # указывает хост Redis
+      - REDIS_PORT=6379 # указывает порт Redis
+      - REDIS_PASSWORD=321321 # указывает пароль Redis
     depends_on: # Зависимость от сервиса db
       - db
       - mongodb
+      - redis
     command: yarn start:dev # Команда для запуска приложения в режиме разработки
   mongodb:
     image: mongo:latest
@@ -34,6 +38,7 @@ services:
       - '27017:27017'
     volumes:
       - mongodb_data:/data/db
+
   mongo-express:
     image: mongo-express:latest
     container_name: mongo-express
@@ -46,6 +51,24 @@ services:
       - ME_CONFIG_MONGODB_SERVER=mongodb
     depends_on:
       - mongodb
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6380:6379'
+    volumes:
+      - redis-data:/data
+    restart: always
+
+  redis-insight: # не работает через браузер
+    image: redis/redisinsight:latest
+    ports:
+      - '8002:8001'
+    volumes:
+      - redis-insight-data:/db
+    restart: always
+    depends_on:
+      - redis
 
   db: # Сервис базы данных
     image: postgres:14-alpine # Используем образ Postgres
@@ -73,3 +96,5 @@ services:
 volumes: # Волюмы для хранения данных баз данных
   postgres_data: # сохраняет данные Postgres
   mongodb_data: # сохраняет данные MongoDB
+  redis-data: # сохраняет данные Redis
+  redis-insight-data: # сохраняет данные RedisInsight

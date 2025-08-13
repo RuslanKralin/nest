@@ -12,9 +12,11 @@ import { PostsController } from './posts/posts.controller';
 import { Posts } from './posts/posts.model';
 import { LoggingModule } from './logging/logging.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AppRedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
+    AppRedisModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`,

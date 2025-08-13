@@ -8,11 +8,13 @@ import { UserRoles } from 'src/roles/user-roles.model';
 import { RolesModule } from 'src/roles/roles.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { Posts } from 'src/posts/posts.model';
+import { AppRedisModule } from 'src/redis/redis.module';
 
 @Module({
   controllers: [UsersController], // контроллеры
   providers: [UsersService], // сервисы
   imports: [
+    AppRedisModule,
     SequelizeModule.forFeature([User, Role, UserRoles, Posts]),
     RolesModule,
     forwardRef(() => AuthModule),

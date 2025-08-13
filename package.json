@@ -18,6 +18,7 @@
     "local:dev": "docker-compose -f docker-compose.local.yml up -d && cross-env NODE_ENV=local nest start --watch"
   },
   "dependencies": {
+    "@nestjs-modules/ioredis": "^2.0.2",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
@@ -31,6 +32,7 @@
     "class-validator": "^0.14.2",
     "cross-env": "^7.0.3",
     "dotenv": "^17.2.0",
+    "ioredis": "^5.7.0",
     "mongoose": "^8.17.0",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
